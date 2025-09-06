@@ -3,10 +3,11 @@
 import { SessionProvider } from 'next-auth/react'
 import Header from './Header'
 import Footer from './Footer'
+import { Session } from 'next-auth'
 
 interface RootLayoutProps {
   children: React.ReactNode
-  session?: any
+  session?: Session | null
 }
 
 export default function RootLayout({ children, session }: RootLayoutProps) {

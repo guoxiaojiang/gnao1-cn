@@ -368,7 +368,7 @@ export default function DonatePage() {
                   <span>1234 5678 9012 3456</span>
                 </div>
                 <p className="text-xs text-gray-500 mt-3">
-                  转账时请注明"GNAO1捐赠+您的姓名"，转账后请联系我们确认
+                  转账时请注明&ldquo;GNAO1捐赠+您的姓名&rdquo;，转账后请联系我们确认
                 </p>
               </CardContent>
             </Card>

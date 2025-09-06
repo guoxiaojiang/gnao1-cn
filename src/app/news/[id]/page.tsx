@@ -141,7 +141,7 @@ const relatedArticles = [
 export default function NewsDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const [article, setArticle] = useState<any>(null)
+  const [article, setArticle] = useState<typeof mockArticles[keyof typeof mockArticles] | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -245,7 +245,7 @@ export default function NewsDetailPage() {
 
                   {/* Tags */}
                   <div className="flex gap-2 mb-6">
-                    {article.tags.map((tag: any, index: number) => (
+                    {article.tags.map((tag: { name: string }, index: number) => (
                       <Badge key={index} variant="secondary" className="text-xs">
                         {tag.name}
                       </Badge>

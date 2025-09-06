@@ -45,17 +45,17 @@ export default function SignInPage() {
   }
 
   return (
-    <div className=\"min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8\">
-      <div className=\"max-w-md w-full space-y-8\">
-        <div className=\"text-center\">
-          <Link href=\"/\" className=\"flex items-center justify-center space-x-2 mb-6\">
-            <Heart className=\"h-8 w-8 text-red-500\" />
-            <span className=\"text-2xl font-bold text-gray-900\">GNAO1患者之家</span>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div className="text-center">
+          <Link href="/" className="flex items-center justify-center space-x-2 mb-6">
+            <Heart className="h-8 w-8 text-red-500" />
+            <span className="text-2xl font-bold text-gray-900">GNAO1患者之家</span>
           </Link>
-          <h2 className=\"text-3xl font-bold text-gray-900\">登录账户</h2>
-          <p className=\"mt-2 text-sm text-gray-600\">
+          <h2 className="text-3xl font-bold text-gray-900">登录账户</h2>
+          <p className="mt-2 text-sm text-gray-600">
             还没有账户？{' '}
-            <Link href=\"/auth/signup\" className=\"font-medium text-blue-600 hover:text-blue-500\">
+            <Link href="/auth/signup" className="font-medium text-blue-600 hover:text-blue-500">
               立即注册
             </Link>
           </p>
@@ -69,69 +69,69 @@ export default function SignInPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className=\"space-y-6\">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <div className=\"flex items-center space-x-2 text-red-600 bg-red-50 p-3 rounded-md\">
-                  <AlertCircle className=\"h-4 w-4\" />
-                  <span className=\"text-sm\">{error}</span>
+                <div className="flex items-center space-x-2 text-red-600 bg-red-50 p-3 rounded-md">
+                  <AlertCircle className="h-4 w-4" />
+                  <span className="text-sm">{error}</span>
                 </div>
               )}
 
               <div>
-                <label htmlFor=\"email\" className=\"block text-sm font-medium text-gray-700 mb-1\">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                   邮箱地址
                 </label>
                 <Input
-                  id=\"email\"
-                  type=\"email\"
+                  id="email"
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder=\"请输入您的邮箱地址\"
+                  placeholder="请输入您的邮箱地址"
                   required
-                  className=\"w-full\"
+                  className="w-full"
                 />
               </div>
 
               <div>
-                <label htmlFor=\"password\" className=\"block text-sm font-medium text-gray-700 mb-1\">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                   密码
                 </label>
                 <Input
-                  id=\"password\"
-                  type=\"password\"
+                  id="password"
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder=\"请输入您的密码\"
+                  placeholder="请输入您的密码"
                   required
-                  className=\"w-full\"
+                  className="w-full"
                 />
               </div>
 
-              <div className=\"flex items-center justify-between\">
-                <div className=\"flex items-center\">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
                   <input
-                    id=\"remember-me\"
-                    name=\"remember-me\"
-                    type=\"checkbox\"
-                    className=\"h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded\"
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
-                  <label htmlFor=\"remember-me\" className=\"ml-2 block text-sm text-gray-700\">
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                     记住我
                   </label>
                 </div>
 
-                <div className=\"text-sm\">
-                  <Link href=\"/auth/forgot-password\" className=\"font-medium text-blue-600 hover:text-blue-500\">
+                <div className="text-sm">
+                  <Link href="/auth/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
                     忘记密码？
                   </Link>
                 </div>
               </div>
 
               <Button
-                type=\"submit\"
+                type="submit"
                 disabled={isLoading}
-                className=\"w-full\"
-                size=\"lg\"
+                className="w-full"
+                size="lg"
               >
                 {isLoading ? '登录中...' : '登录'}
               </Button>
@@ -139,13 +139,13 @@ export default function SignInPage() {
           </CardContent>
         </Card>
 
-        <div className=\"text-center text-sm text-gray-600\">
+        <div className="text-center text-sm text-gray-600">
           登录即表示您同意我们的{' '}
-          <Link href=\"/terms\" className=\"font-medium text-blue-600 hover:text-blue-500\">
+          <Link href="/terms" className="font-medium text-blue-600 hover:text-blue-500">
             服务条款
           </Link>
           {' '}和{' '}
-          <Link href=\"/privacy\" className=\"font-medium text-blue-600 hover:text-blue-500\">
+          <Link href="/privacy" className="font-medium text-blue-600 hover:text-blue-500">
             隐私政策
           </Link>
         </div>
