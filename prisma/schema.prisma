@@ -1,0 +1,251 @@
+// GNAO1罕见病患者之家数据库模型
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户模型
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  username    String   @unique
+  password    String
+  avatar      String?
+  realName    String?
+  role        Role     @default(USER)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // 关联关系
+  posts       Post[]
+  comments    Comment[]
+  donations   Donation[]
+  articles    Article[]
+  
+  @@map("users")
+}
+
+// 用户角色枚举
+enum Role {
+  USER      // 普通用户
+  MODERATOR // 版主
+  ADMIN     // 管理员
+  SUPER_ADMIN // 超级管理员
+}
+
+// 文章/资讯模型
+model Article {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  content     String        @db.Text
+  excerpt     String?
+  coverImage  String?
+  status      ArticleStatus @default(DRAFT)
+  isSticky    Boolean       @default(false)
+  viewCount   Int          @default(0)
+  authorId    String
+  categoryId  String?
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // 关联关系
+  author      User          @relation(fields: [authorId], references: [id])
+  category    Category?     @relation(fields: [categoryId], references: [id])
+  tags        ArticleTag[]
+  
+  @@map("articles")
+}
+
+// 文章状态枚举
+enum ArticleStatus {
+  DRAFT     // 草稿
+  REVIEWING // 审核中
+  PUBLISHED // 已发布
+  ARCHIVED  // 已归档
+}
+
+// 分类模型
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  parentId    String?
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // 关联关系
+  parent      Category? @relation("CategoryChildren", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryChildren")
+  articles    Article[]
+  posts       Post[]
+  
+  @@map("categories")
+}
+
+// 标签模型
+model Tag {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  slug        String       @unique
+  createdAt   DateTime     @default(now())
+  
+  // 关联关系
+  articles    ArticleTag[]
+  posts       PostTag[]
+  
+  @@map("tags")
+}
+
+// 文章标签关联表
+model ArticleTag {
+  articleId   String
+  tagId       String
+  
+  article     Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag         Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@id([articleId, tagId])
+  @@map("article_tags")
+}
+
+// 论坛帖子模型
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  content     String     @db.Text
+  status      PostStatus @default(PUBLISHED)
+  isSticky    Boolean    @default(false)
+  isPinned    Boolean    @default(false)
+  viewCount   Int       @default(0)
+  authorId    String
+  categoryId  String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // 关联关系
+  author      User       @relation(fields: [authorId], references: [id])
+  category    Category?  @relation(fields: [categoryId], references: [id])
+  comments    Comment[]
+  tags        PostTag[]
+  
+  @@map("posts")
+}
+
+// 帖子状态枚举
+enum PostStatus {
+  DRAFT     // 草稿
+  PUBLISHED // 已发布
+  LOCKED    // 已锁定
+  DELETED   // 已删除
+}
+
+// 帖子标签关联表
+model PostTag {
+  postId      String
+  tagId       String
+  
+  post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag         Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+// 评论模型
+model Comment {
+  id          String        @id @default(cuid())
+  content     String        @db.Text
+  status      CommentStatus @default(PUBLISHED)
+  authorId    String
+  postId      String?
+  parentId    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // 关联关系
+  author      User          @relation(fields: [authorId], references: [id])
+  post        Post?         @relation(fields: [postId], references: [id])
+  parent      Comment?      @relation("CommentReplies", fields: [parentId], references: [id])
+  replies     Comment[]     @relation("CommentReplies")
+  
+  @@map("comments")
+}
+
+// 评论状态枚举
+enum CommentStatus {
+  PENDING   // 待审核
+  PUBLISHED // 已发布
+  REJECTED  // 已拒绝
+}
+
+// 捐赠记录模型
+model Donation {
+  id            String         @id @default(cuid())
+  amount        Decimal        @db.Decimal(10, 2)
+  donorName     String?
+  donorEmail    String?
+  message       String?
+  paymentMethod PaymentMethod
+  status        DonationStatus @default(PENDING)
+  transactionId String?
+  userId        String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  // 关联关系
+  user          User?          @relation(fields: [userId], references: [id])
+  
+  @@map("donations")
+}
+
+// 支付方式枚举
+enum PaymentMethod {
+  ALIPAY    // 支付宝
+  WECHAT    // 微信支付
+  BANK      // 银行转账
+  OTHER     // 其他方式
+}
+
+// 捐赠状态枚举
+enum DonationStatus {
+  PENDING   // 待支付
+  COMPLETED // 已完成
+  FAILED    // 支付失败
+  REFUNDED  // 已退款
+}
+
+// 文件上传记录
+model Upload {
+  id          String   @id @default(cuid())
+  filename    String
+  originalName String
+  path        String
+  size        Int
+  mimeType    String
+  uploaderId  String
+  createdAt   DateTime @default(now())
+  
+  @@map("uploads")
+}
+
+// 网站设置模型
+model Setting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   @db.Text
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("settings")
+}
