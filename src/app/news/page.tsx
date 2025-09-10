@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Search, Calendar, User, Eye } from 'lucide-react'
+import { Search, Calendar, User, Eye, Bot, QrCode } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 
 // 模拟数据，实际应用中应该从数据库获取
@@ -118,6 +118,54 @@ export default function NewsPage() {
             <p className="text-xl md:text-2xl opacity-90 leading-relaxed">
               获取GNAO1相关的最新研究进展、治疗资讯和健康指导
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* AI工具推荐区域 */}
+      <section className="py-8 bg-gradient-to-r from-purple-50 to-blue-50 border-b">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100">
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                {/* 二维码图片 - 突出显示 */}
+                <div className="flex-shrink-0">
+                  <div className="w-40 h-40 bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl flex items-center justify-center p-2 shadow-lg border border-purple-200">
+                    <img 
+                      src="/images/ima_gnao1.png" 
+                      alt="腾讯IMA GNAO1知识库二维码" 
+                      className="w-full h-full object-contain rounded-xl"
+                    />
+                  </div>
+                </div>
+                
+                {/* 文字说明 - 简化样式 */}
+                <div className="flex-1 text-center md:text-left">
+                  <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
+                    <Bot className="h-5 w-5 text-purple-500" />
+                    <h3 className="text-lg font-medium text-gray-800">GNAO1知识库</h3>
+                  </div>
+                  <p className="text-gray-600 mb-3 text-sm leading-relaxed">
+                    想要通过AI工具了解更多我们积累的材料，请使用腾讯的 <span className="font-medium text-purple-600">IMA</span> 扫码添加<span className="font-medium text-purple-600">GNAO1 知识库</span>
+                  </p>
+                  <div className="flex items-center justify-center md:justify-start gap-2 text-xs text-purple-500">
+                    <QrCode className="h-3 w-3" />
+                    <span>扫码即可获得专业AI助手支持</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    或点击此链接：
+                    <a 
+                      href="https://ima.qq.com/wiki/?shareId=7a0b889748e383c148ea6fd2318bdaf0c19d2dd69c0db0dfcf2c5cccc93d9d78" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:text-blue-700 underline hover:no-underline transition-colors ml-1"
+                    >
+                      腾讯IMA GNAO1知识库
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

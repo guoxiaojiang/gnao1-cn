@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Heart, Users, BookOpen, MessageSquare, Brain } from 'lucide-react'
+import { ArrowRight, Heart, Users, BookOpen, MessageSquare, Brain, Atom, Dna, Shield, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -54,9 +54,26 @@ export default function HomePage() {
         {/* 背景装饰元素 - 增强对比度 */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/40"></div>
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-20 left-10 w-20 h-20 bg-white bg-opacity-10 rounded-full blur-xl"></div>
-          <div className="absolute bottom-32 right-16 w-32 h-32 bg-white bg-opacity-5 rounded-full blur-2xl"></div>
-          <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-white bg-opacity-10 rounded-full blur-lg"></div>
+          {/* DNA分子图标 */}
+          <div className="absolute top-20 left-10 w-20 h-20 flex items-center justify-center">
+            <Dna className="h-12 w-12 text-white opacity-20" />
+          </div>
+          {/* 原子分子图标 */}
+          <div className="absolute bottom-32 right-16 w-32 h-32 flex items-center justify-center">
+            <Atom className="h-16 w-16 text-white opacity-15" />
+          </div>
+          {/* 保护盾图标 */}
+          <div className="absolute top-1/2 left-1/4 w-16 h-16 flex items-center justify-center">
+            <Shield className="h-10 w-10 text-white opacity-25" />
+          </div>
+          {/* 星花图标 */}
+          <div className="absolute top-1/3 right-1/3 w-12 h-12 flex items-center justify-center">
+            <Sparkles className="h-8 w-8 text-white opacity-20" />
+          </div>
+          {/* 脑部图标 */}
+          <div className="absolute bottom-1/4 left-1/3 w-14 h-14 flex items-center justify-center">
+            <Brain className="h-9 w-9 text-white opacity-20" />
+          </div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
@@ -226,9 +243,26 @@ export default function HomePage() {
         {/* 背景装饰 */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full">
-            <div className="absolute top-16 left-8 w-24 h-24 bg-white bg-opacity-10 rounded-full blur-xl"></div>
-            <div className="absolute bottom-20 right-12 w-32 h-32 bg-white bg-opacity-5 rounded-full blur-2xl"></div>
-            <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-white bg-opacity-10 rounded-full blur-lg"></div>
+            {/* DNA分子图标 */}
+            <div className="absolute top-16 left-8 w-24 h-24 flex items-center justify-center">
+              <Dna className="h-14 w-14 text-white opacity-15" />
+            </div>
+            {/* 原子分子图标 */}
+            <div className="absolute bottom-20 right-12 w-32 h-32 flex items-center justify-center">
+              <Atom className="h-18 w-18 text-white opacity-10" />
+            </div>
+            {/* 心脏图标 */}
+            <div className="absolute top-1/3 right-1/4 w-16 h-16 flex items-center justify-center">
+              <Heart className="h-10 w-10 text-pink-300 opacity-30" />
+            </div>
+            {/* 保护盾图标 */}
+            <div className="absolute bottom-1/3 left-1/5 w-14 h-14 flex items-center justify-center">
+              <Shield className="h-9 w-9 text-white opacity-20" />
+            </div>
+            {/* 星花图标 */}
+            <div className="absolute top-1/4 left-2/3 w-12 h-12 flex items-center justify-center">
+              <Sparkles className="h-8 w-8 text-yellow-300 opacity-25" />
+            </div>
           </div>
         </div>
         
