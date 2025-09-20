@@ -467,7 +467,7 @@ export default function ForumPage() {
                 </div>
                 <div>
                   <div className="font-medium mb-1">QQ群</div>
-                  <div className="text-gray-600">123456789</div>
+                  <div className="text-gray-600">xxxx</div>
                 </div>
               </CardContent>
             </Card>
