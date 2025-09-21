@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Heart, Mail, Phone } from 'lucide-react'
+import { Brain, Mail, Phone } from 'lucide-react'
 
 const Footer = () => {
   return (
@@ -9,7 +9,7 @@ const Footer = () => {
           {/* Logo and Description */}
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <Heart className="h-6 w-6 text-red-500" />
+              <Brain className="h-6 w-6 text-purple-600" />
               <span className="text-xl font-bold">GNAO1患者之家</span>
             </Link>
             <p className="text-gray-600 text-sm leading-relaxed mb-4">

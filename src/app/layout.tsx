@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   description: "为中国GNAO1罕见病患者及家庭提供信息支持、交流平台和关怀服务",
   keywords: "GNAO1, 罕见病, 患者支持, 医疗信息, 社区交流",
   authors: [{ name: "GNAO1患者之家" }],
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export const viewport: Viewport = {
