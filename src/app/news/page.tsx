@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -9,74 +9,37 @@ import { Badge } from '@/components/ui/badge'
 import { Search, Calendar, User, Eye, Bot, QrCode } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 
-// 模拟数据，实际应用中应该从数据库获取
-const mockArticles = [
-  {
-    id: '1',
-    title: 'GNAO1基因治疗研究获得重大突破',
-    excerpt: '最新研究表明，基因治疗技术在GNAO1相关疾病治疗中显示出巨大潜力...',
-    content: '',
-    coverImage: null,
-    author: { username: '研究团队', avatar: null },
-    publishedAt: new Date('2024-01-15'),
-    viewCount: 1520,
-    category: { name: '研究进展', slug: 'research' },
-    tags: [{ name: '基因治疗' }, { name: '突破性进展' }],
-    isSticky: true
-  },
-  {
-    id: '2',
-    title: '2024年GNAO1国际研讨会即将召开',
-    excerpt: '全球GNAO1研究专家将齐聚一堂，分享最新的研究成果和治疗经验...',
-    content: '',
-    coverImage: null,
-    author: { username: '会议组委会', avatar: null },
-    publishedAt: new Date('2024-01-10'),
-    viewCount: 856,
-    category: { name: '会议活动', slug: 'events' },
-    tags: [{ name: '国际会议' }, { name: '学术交流' }],
-    isSticky: false
-  },
-  {
-    id: '3',
-    title: '新型抗癫痫药物在GNAO1患者中的应用',
-    excerpt: '临床试验结果显示，新型抗癫痫药物对GNAO1相关癫痫具有良好的控制效果...',
-    content: '',
-    coverImage: null,
-    author: { username: '医学专家', avatar: null },
-    publishedAt: new Date('2024-01-08'),
-    viewCount: 1245,
-    category: { name: '治疗进展', slug: 'treatment' },
-    tags: [{ name: '药物治疗' }, { name: '临床试验' }],
-    isSticky: false
-  },
-  {
-    id: '4',
-    title: '家庭康复训练指南：如何在家进行有效的康复训练',
-    excerpt: '专业康复师分享在家进行康复训练的实用方法和注意事项...',
-    content: '',
-    coverImage: null,
-    author: { username: '康复专家', avatar: null },
-    publishedAt: new Date('2024-01-05'),
-    viewCount: 2134,
-    category: { name: '康复指南', slug: 'rehabilitation' },
-    tags: [{ name: '家庭康复' }, { name: '实用指南' }],
-    isSticky: false
-  },
-  {
-    id: '5',
-    title: 'GNAO1患者营养管理的重要性',
-    excerpt: '合理的营养管理对GNAO1患者的康复和生活质量改善具有重要意义...',
-    content: '',
-    coverImage: null,
-    author: { username: '营养师', avatar: null },
-    publishedAt: new Date('2024-01-03'),
-    viewCount: 967,
-    category: { name: '健康指导', slug: 'health' },
-    tags: [{ name: '营养管理' }, { name: '健康指导' }],
-    isSticky: false
+// 接口定义
+interface Article {
+  id: string
+  title: string
+  excerpt: string
+  viewCount: number
+  publishedAt: string
+  isSticky: boolean
+  author: {
+    username: string
+    realName?: string
   }
-]
+  category?: {
+    name: string
+    slug: string
+  }
+  tags: {
+    name: string
+    slug: string
+  }[]
+}
+
+interface ArticleResponse {
+  articles: Article[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
+}
 
 const categories = [
   { name: '全部', slug: 'all' },
@@ -90,17 +53,69 @@ const categories = [
 export default function NewsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [articles, setArticles] = useState(mockArticles)
+  const [articles, setArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
-  const filteredArticles = articles.filter(article => {
-    const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         article.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === 'all' || article.category.slug === selectedCategory
-    return matchesSearch && matchesCategory
-  })
+  // 加载文章数据
+  useEffect(() => {
+    loadArticles()
+  }, [selectedCategory, currentPage])
+
+  const loadArticles = async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: '10'
+      })
+      
+      if (selectedCategory !== 'all') {
+        params.append('category', selectedCategory)
+      }
+      
+      if (searchTerm) {
+        params.append('search', searchTerm)
+      }
+
+      const response = await fetch(`/api/articles?${params}`)
+      if (response.ok) {
+        const data: ArticleResponse = await response.json()
+        setArticles(data.articles)
+        setTotalPages(data.pagination.totalPages)
+      } else {
+        console.error('加载文章失败')
+        setArticles([])
+      }
+    } catch (error) {
+      console.error('加载文章失败:', error)
+      setArticles([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // 搜索防抖
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (currentPage === 1) {
+        loadArticles()
+      } else {
+        setCurrentPage(1)
+      }
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [searchTerm])
+
+  const filteredArticles = articles.filter((article: Article) =>
+    article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    article.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   // 将置顶文章排在前面
-  const sortedArticles = filteredArticles.sort((a, b) => {
+  const sortedArticles = filteredArticles.sort((a: Article, b: Article) => {
     if (a.isSticky && !b.isSticky) return -1
     if (!a.isSticky && b.isSticky) return 1
     return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
@@ -221,9 +236,11 @@ export default function NewsPage() {
                                 置顶
                               </Badge>
                             )}
-                            <Badge variant="outline">
-                              {article.category.name}
-                            </Badge>
+                            {article.category && (
+                              <Badge variant="outline">
+                                {article.category.name}
+                              </Badge>
+                            )}
                           </div>
                           <Link href={`/news/${article.id}`}>
                             <CardTitle className="text-xl hover:text-blue-600 transition-colors cursor-pointer">
@@ -279,23 +296,36 @@ export default function NewsPage() {
               </div>
             )}
 
-            {/* Pagination - 实际应用中需要实现分页逻辑 */}
-            {sortedArticles.length > 0 && (
+            {/* Pagination */}
+            {totalPages > 1 && (
               <div className="flex justify-center mt-12">
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" disabled>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    disabled={currentPage <= 1}
+                    onClick={() => setCurrentPage(prev => prev - 1)}
+                  >
                     上一页
                   </Button>
-                  <Button variant="default" size="sm">
-                    1
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    2
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    3
-                  </Button>
-                  <Button variant="outline" size="sm">
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                  >
                     下一页
                   </Button>
                 </div>

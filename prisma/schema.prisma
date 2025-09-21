@@ -5,7 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -44,7 +44,7 @@ model Article {
   id          String        @id @default(cuid())
   title       String
   slug        String        @unique
-  content     String        @db.Text
+  content     String
   excerpt     String?
   coverImage  String?
   status      ArticleStatus @default(DRAFT)
@@ -122,7 +122,7 @@ model ArticleTag {
 model Post {
   id          String     @id @default(cuid())
   title       String
-  content     String     @db.Text
+  content     String
   status      PostStatus @default(PUBLISHED)
   isSticky    Boolean    @default(false)
   isPinned    Boolean    @default(false)
@@ -164,7 +164,7 @@ model PostTag {
 // 评论模型
 model Comment {
   id          String        @id @default(cuid())
-  content     String        @db.Text
+  content     String
   status      CommentStatus @default(PUBLISHED)
   authorId    String
   postId      String?
@@ -191,7 +191,7 @@ enum CommentStatus {
 // 捐赠记录模型
 model Donation {
   id            String         @id @default(cuid())
-  amount        Decimal        @db.Decimal(10, 2)
+  amount        Float
   donorName     String?
   donorEmail    String?
   message       String?
@@ -242,7 +242,7 @@ model Upload {
 model Setting {
   id          String   @id @default(cuid())
   key         String   @unique
-  value       String   @db.Text
+  value       String
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
